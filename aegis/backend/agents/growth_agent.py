@@ -22,28 +22,30 @@ class GrowthAgent(BaseAgent):
             result = await executor.run_python("print(round((0.42 * 0.6) + (0.28 * 0.8) + 0.26, 2))")
             roi_signal = result["stdout"].strip() or roi_signal
         await asyncio.sleep(0.35)
-        await self.think(session_id, f"Calculated first-pass ROI priority score: {roi_signal}.")
 
-        recommendations = [
-            "Run a seven-day offer clarity A/B test on the highest-intent page.",
-            "Launch a lifecycle sequence for users who abandon after viewing proof or pricing.",
-            "Create one referral or expansion loop tied to the moment users see value.",
-            "Instrument weekly leading indicators before optimizing lagging revenue.",
-        ]
-        content = (
-            "Growth plan: prioritize experiments that shorten time-to-proof before expanding channels. "
-            "The best sequence is offer clarity, lifecycle recovery, then compounding referral or expansion loops."
-        )
+        if parsed_goal.domain in ["digital media", "defense technology"]:
+            await self.think(session_id, f"Calculated audience growth ROI signal: {roi_signal}.")
+            recommendations = [
+                "Seed the technical articles in specialized defense forums and niche subreddits.",
+                "Launch a newsletter pop-up targeted specifically at readers who finish >70% of a UAV or naval fleet article.",
+                "Collaborate with niche defense YouTubers or OSINT accounts for backlink building.",
+            ]
+            content = "Growth plan: Prioritize organic distribution in high-trust defense communities before utilizing paid acquisition."
+        else:
+            await self.think(session_id, f"Calculated first-pass ROI priority score: {roi_signal}.")
+            recommendations = [
+                "Run a seven-day offer clarity A/B test on the highest-intent page.",
+                "Launch a lifecycle sequence for users who abandon after viewing proof or pricing.",
+                "Create one referral or expansion loop tied to the moment users see value.",
+            ]
+            content = "Growth plan: prioritize experiments that shorten time-to-proof before expanding channels."
+
         return AgentOutput(
             agent=self.name,
             role=self.role,
             task=self.task,
             content=content,
             confidence=0.76,
-            evidence=[
-                f"Computed ROI priority signal: {roi_signal}.",
-                "Short feedback cycles reduce wasted spend before channel scaling.",
-            ],
+            evidence=[f"Computed ROI priority signal: {roi_signal}."],
             recommendations=recommendations,
         )
-
