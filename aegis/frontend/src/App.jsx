@@ -1,4 +1,4 @@
-import { Activity, RotateCcw, ShieldCheck } from "lucide-react";
+import { Activity, RotateCcw, ShieldCheck, Wifi, WifiOff } from "lucide-react";
 import { useMemo } from "react";
 import AgentCard from "./components/AgentCard.jsx";
 import AgentGraph from "./components/AgentGraph.jsx";
@@ -21,6 +21,9 @@ export default function App() {
     return <Home onLaunch={startSession} isLaunching={isLaunching} error={error} />;
   }
 
+  // Determine if we have an active WebSocket connection
+  const isConnected = !live.error;
+
   return (
     <main className="app-shell">
       <header className="command-header">
@@ -29,12 +32,26 @@ export default function App() {
           <h1>Session #{session.session_id}</h1>
           <p className="goal-line">{session.goal}</p>
         </div>
+        
         <div className="header-actions">
+          {/* New Connection Status Indicator */}
+          <div 
+            className="phase-pill" 
+            style={{ 
+              color: isConnected ? 'var(--teal)' : 'var(--rose)',
+              borderColor: isConnected ? 'rgba(70, 211, 154, 0.2)' : 'rgba(239, 71, 111, 0.2)'
+            }}
+          >
+            {isConnected ? <Wifi size={16} /> : <WifiOff size={16} />}
+            <span>{isConnected ? 'Live' : 'Disconnected'}</span>
+          </div>
+
           <div className="phase-pill">
             <Activity size={16} />
             <span>{formatPhase(live.phase || session.status)}</span>
           </div>
-          <button className="icon-button" onClick={resetSession} aria-label="Reset session">
+          
+          <button className="icon-button" onClick={resetSession} aria-label="Reset session" title="Start New Session">
             <RotateCcw size={18} />
           </button>
         </div>
@@ -65,7 +82,12 @@ export default function App() {
             {agents.map((agent) => (
               <AgentCard key={agent.name} agent={agent} score={live.scores[agent.name]} />
             ))}
-            {agents.length === 0 && <p className="muted">Agents are assembling.</p>}
+            {agents.length === 0 && !live.error && (
+              <p className="muted" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span className="status-dot running pulse-ring"></span>
+                Agents are assembling...
+              </p>
+            )}
           </div>
         </div>
 
@@ -99,4 +121,3 @@ function formatPhase(phase) {
     .replace(/_/g, " ")
     .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
-
