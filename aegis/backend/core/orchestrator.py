@@ -135,21 +135,28 @@ class Orchestrator:
         debate_result: DebateResult,
     ) -> dict[str, Any]:
         top_recommendations = []
+        # Sort agents by highest confidence to prioritize the strongest strategies
         for output in sorted(results, key=lambda item: item.confidence, reverse=True):
             top_recommendations.extend(output.recommendations[:2])
 
-        action_plan = [
-            "Pick one target segment and one primary metric for the next seven days.",
-            "Run the highest-confidence offer or messaging experiment first.",
-            "Instrument conversion, recovery, and confidence signals before scaling spend.",
-            "Use the critic's failure thresholds to decide whether to keep, revise, or kill the experiment.",
-        ]
+        # Dynamically build the action plan from the top agent recommendations
+        action_plan = top_recommendations[:3]
+        action_plan.append("Use the critic's failure thresholds to decide whether to keep, revise, or kill the content experiment.")
 
-        synthesis = (
-            f"AEGIS analyzed the goal '{goal}' as a {parsed.domain} objective. The strongest path is to "
-            "tighten the offer around measurable proof, test it quickly with high-intent users, and convert "
-            "the result into execution assets before adding channel complexity."
-        )
+        # Branching synthesis based on domain
+        if parsed.domain in ["digital media", "defense technology"]:
+            synthesis = (
+                f"AEGIS analyzed the goal '{goal}' as a {parsed.domain} objective. The strongest path is to "
+                "establish absolute authority by producing highly technical, well-researched content, targeting high-intent "
+                "reader search queries, and avoiding mainstream generalizations."
+            )
+        else:
+            synthesis = (
+                f"AEGIS analyzed the goal '{goal}' as a {parsed.domain} objective. The strongest path is to "
+                "tighten the offer around measurable proof, test it quickly with high-intent users, and convert "
+                "the result into execution assets before adding channel complexity."
+            )
+
         return {
             "goal": goal,
             "parsed_goal": parsed.to_dict(),
@@ -161,4 +168,3 @@ class Orchestrator:
             "scores": debate_result.scores,
             "winner_logic": debate_result.winner_logic,
         }
-
