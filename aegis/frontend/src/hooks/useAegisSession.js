@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://aegis-elh0.onrender.com'
+const API_URL = import.meta.env.VITE_API_URL || 'https://aegis-elh0.onrender.com';
 
 export function useAegisSession() {
   const [session, setSession] = useState(null);
@@ -11,7 +11,8 @@ export function useAegisSession() {
     setIsLaunching(true);
     setError("");
     try {
-      const response = await fetch(`${API_BASE}/session/start`, {
+      // CHANGED: API_BASE is now API_URL
+      const response = await fetch(`${API_URL}/session/start`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ goal })
@@ -39,4 +40,3 @@ export function useAegisSession() {
 
   return { session, isLaunching, error, startSession, resetSession };
 }
-
