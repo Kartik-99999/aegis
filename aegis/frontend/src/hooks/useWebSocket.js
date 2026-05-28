@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 
-const WS_URL = import.meta.env.VITE_WS_URL || 'wss://aegis-elh0.onrender.com';
+// Standardized the variable name to WS_BASE so it works in the useEffect hook
+const WS_BASE = import.meta.env.VITE_WS_URL || 'wss://aegis-elh0.onrender.com';
 
 const initialState = {
   phase: "queued",
@@ -22,8 +23,8 @@ export function useWebSocket(sessionId) {
     }
 
     setState(initialState);
-    // CHANGED: WS_BASE is now WS_URL
-    const socket = new WebSocket(`${WS_URL}/ws/${sessionId}`);
+    // Uses the correctly defined WS_BASE variable
+    const socket = new WebSocket(`${WS_BASE}/ws/${sessionId}`);
 
     socket.onmessage = (message) => {
       const event = JSON.parse(message.data);
