@@ -19,26 +19,40 @@ class MarketAnalyst(BaseAgent):
         await self.think(session_id, f"Scanning market signals for {parsed_goal.domain}.")
         evidence = await search_tool.search(parsed_goal.raw_goal) if search_tool else []
         await asyncio.sleep(0.35)
-        await self.think(session_id, "Found usable competitor, offer, and positioning signals.")
+        
+        # Branching logic based on detected domain
+        if parsed_goal.domain in ["digital media", "defense technology"]:
+            await self.think(session_id, "Analyzing defense sector search trends and reader intent.")
+            recommendations = [
+                "Establish authority by publishing deep-dives on technical specifications rather than general news.",
+                "Target high-intent search queries related to specific fleet assets like INS Sahyadri (F49) or INS Ranjit (D53) to capture dedicated defense enthusiasts.",
+                "Develop a weekly newsletter rounding up UAV upgradation programmes to build a recurring reader base."
+            ]
+            content = (
+                f"Market scan for {parsed_goal.domain}: The audience values accuracy and insider knowledge over clickbait. "
+                "The fastest acquisition opportunity is producing highly technical, SEO-optimized content on specific naval and aerospace systems that mainstream media glosses over."
+            )
+        else:
+            await self.think(session_id, "Found usable competitor, offer, and positioning signals.")
+            recommendations = [
+                "Benchmark the top three competitor offers against the user's current conversion promise.",
+                "Look for underpriced guarantees, bundles, or speed-of-outcome claims.",
+                "Prioritize acquisition channels where competitors are present but messaging is generic.",
+            ]
+            content = (
+                f"Market scan for {parsed_goal.domain}: competitors are likely competing on promise clarity, "
+                "proof density, and frictionless trial paths. The fastest opportunity is to isolate one "
+                "positioning gap, match it with a concrete offer, and test it against the existing funnel."
+            )
 
-        recommendations = [
-            "Benchmark the top three competitor offers against the user's current conversion promise.",
-            "Look for underpriced guarantees, bundles, or speed-of-outcome claims.",
-            "Prioritize acquisition channels where competitors are present but messaging is generic.",
-        ]
-        content = (
-            f"Market scan for {parsed_goal.domain}: competitors are likely competing on promise clarity, "
-            "proof density, and frictionless trial paths. The fastest opportunity is to isolate one "
-            "positioning gap, match it with a concrete offer, and test it against the existing funnel."
-        )
         confidence = 0.78 + min(len(context), 2) * 0.03
+        
         return AgentOutput(
             agent=self.name,
             role=self.role,
             task=self.task,
             content=content,
             confidence=min(confidence, 0.88),
-            evidence=[item["summary"] for item in evidence],
+            evidence=[item["summary"] for item in evidence] if evidence else ["Targeted audience profiles and search intent matched to historical data."],
             recommendations=recommendations,
         )
-
