@@ -1,0 +1,9 @@
+httpx
+beautifulsoup4
+playwright
+redis
+motor
+chromadb
+python-docx
+reportlab
+
