@@ -1,6 +1,7 @@
 import { useState } from "react";
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://aegis-elh0.onrender.com';
+// Matches the Vercel environment variable exactly
+const API_BASE = import.meta.env.VITE_API_BASE || 'https://aegis-elh0.onrender.com';
 
 export function useAegisSession() {
   const [session, setSession] = useState(null);
@@ -11,8 +12,8 @@ export function useAegisSession() {
     setIsLaunching(true);
     setError("");
     try {
-      // CHANGED: API_BASE is now API_URL
-      const response = await fetch(`${API_URL}/session/start`, {
+      // Uses the correctly defined API_BASE variable
+      const response = await fetch(`${API_BASE}/session/start`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ goal })
