@@ -13,3 +13,12 @@ dist/
 backend/.data/
 frontend/.env.local
 
+.env
+*.env
+__pycache__/
+*.pyc
+.DS_Store
+aegis-important-files.zip
+node_modules/
+dist/
+chroma_data/
