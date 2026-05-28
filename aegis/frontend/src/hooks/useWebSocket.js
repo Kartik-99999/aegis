@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
-const WS_BASE = import.meta.env.VITE_WS_URL || "ws://localhost:8000";
+const WS_URL = import.meta.env.VITE_WS_URL || 'wss://aegis-elh0.onrender.com'
 
 const initialState = {
   phase: "queued",
