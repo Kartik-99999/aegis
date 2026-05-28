@@ -21,6 +21,13 @@ class GoalParser:
         return ParsedGoal(goal, domain, objective, sub_tasks, signals)
 
     def _detect_domain(self, lowered_goal: str) -> str:
+        # Specialized niches
+        if any(term in lowered_goal for term in ["media", "journalism", "readers", "defencepost", "news"]):
+            return "digital media"
+        if any(term in lowered_goal for term in ["navy", "uav", "military", "defense", "vessel"]):
+            return "defense technology"
+        
+        # Standard business models
         if any(term in lowered_goal for term in ["e-commerce", "shopify", "cart", "checkout"]):
             return "e-commerce"
         if any(term in lowered_goal for term in ["saas", "subscription", "mrr", "arr"]):
@@ -49,4 +56,3 @@ class GoalParser:
         if any(term in lowered_goal for term in ["risk", "validate", "confidence"]):
             tasks.append("critique")
         return tasks
-
