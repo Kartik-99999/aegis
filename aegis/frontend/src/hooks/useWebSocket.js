@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
-const WS_URL = import.meta.env.VITE_WS_URL || 'wss://aegis-elh0.onrender.com'
+const WS_URL = import.meta.env.VITE_WS_URL || 'wss://aegis-elh0.onrender.com';
 
 const initialState = {
   phase: "queued",
@@ -22,7 +22,8 @@ export function useWebSocket(sessionId) {
     }
 
     setState(initialState);
-    const socket = new WebSocket(`${WS_BASE}/ws/${sessionId}`);
+    // CHANGED: WS_BASE is now WS_URL
+    const socket = new WebSocket(`${WS_URL}/ws/${sessionId}`);
 
     socket.onmessage = (message) => {
       const event = JSON.parse(message.data);
