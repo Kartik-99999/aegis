@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API_URL = import.meta.env.VITE_API_URL || 'https://aegis-elh0.onrender.com'
 
 export function useAegisSession() {
   const [session, setSession] = useState(null);
